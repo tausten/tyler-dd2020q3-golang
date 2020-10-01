@@ -6,11 +6,33 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestHello(t *testing.T) {
+const expectedDefaultHelloWorldResponse = "Hello, world"
+
+func TestHelloWorld(t *testing.T) {
 	// Given
 	// When
-	result := Hello()
+	result := HelloWorld()
 
 	// Then
-	assert.Equal(t, "Hello, world", result)
+	assert.Equal(t, expectedDefaultHelloWorldResponse, result)
+}
+
+func TestHello(t *testing.T) {
+	// Given
+	const name = "Chris"
+	const expectedResult = "Hello, " + name
+
+	// When
+	result := Hello(name)
+
+	// Then
+	assert.Equal(t, expectedResult, result)
+}
+
+func TestHelloDefaultsToWorldForEmptyString(t *testing.T) {
+	// Given
+	// When
+	result := Hello("")
+	// Then
+	assert.Equal(t, expectedDefaultHelloWorldResponse, result)
 }
