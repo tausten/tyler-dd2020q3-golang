@@ -88,3 +88,17 @@ func TestUpdate(t *testing.T) {
 		assert.Equal(t, ErrWordDoesNotExist, errors.Cause(err))
 	})
 }
+
+func TestDelete(t *testing.T) {
+	// Given
+	const word = "test"
+	const initialDefinition = "this is just a test"
+	dictionary := Dictionary{word: initialDefinition}
+
+	// When
+	dictionary.Delete(word)
+	_, err := dictionary.Search(word)
+
+	// Then
+	assert.Equal(t, ErrNotFound, errors.Cause(err))
+}
