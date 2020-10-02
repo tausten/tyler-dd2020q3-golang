@@ -33,13 +33,29 @@ func TestSearch(t *testing.T) {
 
 func TestAdd(t *testing.T) {
 	// Given
-	dictionary := Dictionary{}
+	const word = "test"
+	const definition = "this is just a test"
 
-	// When
-	dictionary.Add("test", "this is just a test")
-	result, err := dictionary.Search("test")
+	t.Run("new word", func(t *testing.T) {
+		dictionary := Dictionary{}
 
-	// Then
-	assert.NoError(t, err)
-	assert.Equal(t, result, "this is just a test", result)
+		// When
+		addErr := dictionary.Add(word, definition)
+		result, err := dictionary.Search(word)
+
+		// Then
+		assert.NoError(t, addErr)
+		assert.NoError(t, err)
+		assert.Equal(t, definition, result)
+	})
+
+	t.Run("existing word", func(t *testing.T) {
+		dictionary := Dictionary{word: definition}
+
+		// When
+		err := dictionary.Add(word, "some new definition")
+
+		// Then
+		assert.Equal(t, ErrWordExists, errors.Cause(err))
+	})
 }

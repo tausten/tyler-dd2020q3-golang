@@ -8,7 +8,14 @@ import (
 
 type Dictionary map[string]string
 
-var ErrNotFound = errors.New("could not find the word you were looking for")
+type Error string
+
+func (e Error) Error() string { return string(e) }
+
+const (
+	ErrNotFound   = Error("could not find the word you were looking for")
+	ErrWordExists = Error("word already exists")
+)
 
 func (d Dictionary) Search(word string) (definition string, err error) {
 	definition, ok := d[word]
@@ -18,6 +25,17 @@ func (d Dictionary) Search(word string) (definition string, err error) {
 	return definition, err
 }
 
-func (d Dictionary) Add(word string, definition string) {
-	d[word] = definition
+func (d Dictionary) Add(word string, definition string) error {
+	_, err := d.Search(word)
+
+	switch errors.Cause(err) {
+	case ErrNotFound:
+		d[word] = definition
+	case nil:
+		return ErrWordExists
+	default:
+		return errors.Wrap(err, "Add word failed")
+	}
+
+	return nil
 }
