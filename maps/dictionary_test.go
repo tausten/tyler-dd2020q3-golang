@@ -59,3 +59,32 @@ func TestAdd(t *testing.T) {
 		assert.Equal(t, ErrWordExists, errors.Cause(err))
 	})
 }
+
+func TestUpdate(t *testing.T) {
+	// Given
+	const word = "test"
+	const initialDefinition = "this is just a test"
+	const newDefinition = "new definition"
+
+	t.Run("existing word", func(t *testing.T) {
+		dictionary := Dictionary{word: initialDefinition}
+
+		// When
+		dictionary.Update(word, newDefinition)
+		result, err := dictionary.Search(word)
+
+		// Then
+		assert.NoError(t, err)
+		assert.Equal(t, newDefinition, result)
+	})
+
+	t.Run("new word", func(t *testing.T) {
+		dictionary := Dictionary{}
+
+		// When
+		err := dictionary.Update(word, newDefinition)
+
+		// Then
+		assert.Equal(t, ErrWordDoesNotExist, errors.Cause(err))
+	})
+}
