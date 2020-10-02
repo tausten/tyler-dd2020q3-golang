@@ -18,30 +18,24 @@ func TestPerimiter(t *testing.T) {
 }
 
 func TestArea(t *testing.T) {
-
-	checkArea := func(t *testing.T, shape Shape, expected float64) {
-		t.Helper()
-
-		// When
-		result := shape.Area()
-
-		// Then
-		assert.Equal(t, expected, result)
+	// Given
+	areaTests := []struct {
+		name     string
+		shape    Shape
+		expected float64
+	}{
+		{name: "Rectangle", shape: Rectangle{Width: 12, Height: 6}, expected: 72.0},
+		{name: "Circle", shape: Circle{Radius: 10}, expected: 314.1592653589793},
+		{name: "Triangle", shape: Triangle{Base: 12, Height: 6}, expected: 36.0},
 	}
 
-	t.Run("rectangles", func(t *testing.T) {
-		// Given
-		rect := Rectangle{12.0, 6.0}
+	for _, tt := range areaTests {
+		t.Run(tt.name, func(t *testing.T) {
+			// When
+			result := tt.shape.Area()
 
-		// When + Then
-		checkArea(t, rect, 72.00)
-	})
-
-	t.Run("circles", func(t *testing.T) {
-		// Given
-		circle := Circle{10}
-
-		// When + Then
-		checkArea(t, circle, 314.1592653589793)
-	})
+			// Then
+			assert.Equal(t, tt.expected, result, "%#v", tt.shape)
+		})
+	}
 }

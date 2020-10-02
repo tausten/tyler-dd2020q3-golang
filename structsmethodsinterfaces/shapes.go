@@ -30,3 +30,12 @@ func Perimiter(rect Rectangle) float64 {
 func Area(rect Rectangle) float64 {
 	return rect.Width * rect.Height
 }
+
+type Triangle struct {
+	Base   float64
+	Height float64
+}
+
+func (t Triangle) Area() float64 {
+	return (t.Base * t.Height) / 2.0
+}
