@@ -3,6 +3,7 @@ package maps
 import (
 	"testing"
 
+	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -26,6 +27,6 @@ func TestSearch(t *testing.T) {
 		_, err := dictionary.Search("unknown")
 
 		// Then
-		assert.Error(t, err)
+		assert.Equal(t, ErrNotFound, errors.Cause(err))
 	})
 }
