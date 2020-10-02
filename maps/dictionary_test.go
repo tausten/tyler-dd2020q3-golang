@@ -30,3 +30,16 @@ func TestSearch(t *testing.T) {
 		assert.Equal(t, ErrNotFound, errors.Cause(err))
 	})
 }
+
+func TestAdd(t *testing.T) {
+	// Given
+	dictionary := Dictionary{}
+
+	// When
+	dictionary.Add("test", "this is just a test")
+	result, err := dictionary.Search("test")
+
+	// Then
+	assert.NoError(t, err)
+	assert.Equal(t, result, "this is just a test", result)
+}
