@@ -14,12 +14,12 @@ type Sleeper interface {
 }
 
 type ConfigurableSleeper struct {
-	Duration  time.Duration
-	SleepFunc func(time.Duration)
+	SleepDuration time.Duration
+	SleepFunc     func(time.Duration)
 }
 
 func (c *ConfigurableSleeper) Sleep() {
-	c.SleepFunc(c.Duration)
+	c.SleepFunc(c.SleepDuration)
 }
 
 func Countdown(sleeper Sleeper, writer io.Writer) {
