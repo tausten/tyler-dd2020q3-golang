@@ -105,4 +105,46 @@ func TestWalk(t *testing.T) {
 		// Then
 		assert.ElementsMatch(t, want, got)
 	})
+
+	t.Run("with channels", func(t *testing.T) {
+		// Given
+		aChannel := make(chan Profile)
+
+		go func() {
+			aChannel <- Profile{33, "Berlin"}
+			aChannel <- Profile{34, "Katowice"}
+			close(aChannel)
+		}()
+
+		var got []string
+		want := []string{"Berlin", "Katowice"}
+
+		// When
+		walk(aChannel, func(input string) {
+			got = append(got, input)
+		})
+
+		// Then
+		assert.ElementsMatch(t, want, got)
+	})
+
+	t.Run("with function", func(t *testing.T) {
+		// Given
+		aFunction := func() (Profile, Profile) {
+			return Profile{33, "Berlin"}, Profile{34, "Katowice"}
+		}
+
+		var got []string
+		want := []string{"Berlin", "Katowice"}
+
+		// When
+		walk(aFunction, func(input string) {
+			got = append(got, input)
+		})
+
+		// Then
+		assert.ElementsMatch(t, want, got)
+	})
 }
+
+// Left off at:  https://quii.gitbook.io/learn-go-with-tests/go-fundamentals/reflection#write-the-test-first-9
