@@ -2,13 +2,15 @@ package proptests
 
 import (
 	"fmt"
+	"log"
 	"testing"
+	"testing/quick"
 
 	"github.com/stretchr/testify/assert"
 )
 
 var cases = []struct {
-	Arabic int
+	Arabic uint16
 	Roman  string
 }{
 	{Arabic: 1, Roman: "I"},
@@ -71,4 +73,23 @@ func TestConvertingToArabic(t *testing.T) {
 			assert.Equal(t, test.Arabic, got)
 		})
 	}
+}
+
+func TestPropertiesOfConversion(t *testing.T) {
+	// Given
+	assertion := func(arabic uint16) bool {
+		if arabic < 0 || arabic > 3999 {
+			log.Println(arabic)
+			return true
+		}
+		roman := ConvertToRoman(arabic)
+		fromRoman := ConvertToArabic(roman)
+		return fromRoman == arabic
+	}
+
+	// When
+	err := quick.Check(assertion, nil)
+
+	// Then
+	assert.NoError(t, err)
 }

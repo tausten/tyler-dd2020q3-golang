@@ -3,7 +3,7 @@ package proptests
 import "strings"
 
 type RomanNumeral struct {
-	Value  int
+	Value  uint16
 	Symbol string
 }
 
@@ -25,7 +25,7 @@ var allRomanNumerals = RomanNumerals{
 
 type RomanNumerals []RomanNumeral
 
-func (r RomanNumerals) ValueOf(symbols ...byte) int {
+func (r RomanNumerals) ValueOf(symbols ...byte) uint16 {
 	symbol := string(symbols)
 	for _, s := range r {
 		if s.Symbol == symbol {
@@ -35,7 +35,7 @@ func (r RomanNumerals) ValueOf(symbols ...byte) int {
 	return 0
 }
 
-func ConvertToRoman(arabic int) string {
+func ConvertToRoman(arabic uint16) string {
 	var result strings.Builder
 
 	for _, numeral := range allRomanNumerals {
@@ -48,7 +48,7 @@ func ConvertToRoman(arabic int) string {
 	return result.String()
 }
 
-func ConvertToArabic(roman string) (arabic int) {
+func ConvertToArabic(roman string) (arabic uint16) {
 	for i := 0; i < len(roman); i++ {
 		symbol := roman[i]
 
