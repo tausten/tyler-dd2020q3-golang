@@ -7,7 +7,7 @@ type RomanNumeral struct {
 	Symbol string
 }
 
-var allRomanNumerals = []RomanNumeral{
+var allRomanNumerals = RomanNumerals{
 	{1000, "M"},
 	{900, "CM"},
 	{500, "D"},
@@ -23,6 +23,18 @@ var allRomanNumerals = []RomanNumeral{
 	{1, "I"},
 }
 
+type RomanNumerals []RomanNumeral
+
+func (r RomanNumerals) ValueOf(symbols ...byte) int {
+	symbol := string(symbols)
+	for _, s := range r {
+		if s.Symbol == symbol {
+			return s.Value
+		}
+	}
+	return 0
+}
+
 func ConvertToRoman(arabic int) string {
 	var result strings.Builder
 
@@ -34,4 +46,31 @@ func ConvertToRoman(arabic int) string {
 	}
 
 	return result.String()
+}
+
+func ConvertToArabic(roman string) (arabic int) {
+	for i := 0; i < len(roman); i++ {
+		symbol := roman[i]
+
+		// look ahead to next symbol if we can and, the current symbol is base 10 (only valid subtractors)
+		if couldBeSubtractive(i, symbol, roman) {
+			// get the value of the potential two character string
+			value := allRomanNumerals.ValueOf(symbol, roman[i+1])
+
+			if value != 0 {
+				arabic += value
+				i++ // move past this character too for the next loop
+			} else {
+				arabic += allRomanNumerals.ValueOf(symbol)
+			}
+		} else {
+			arabic += allRomanNumerals.ValueOf(symbol)
+		}
+	}
+	return
+}
+
+func couldBeSubtractive(index int, currentSymbol uint8, roman string) bool {
+	isSubtractiveSymbol := currentSymbol == 'I' || currentSymbol == 'X' || currentSymbol == 'C'
+	return index+1 < len(roman) && isSubtractiveSymbol
 }
